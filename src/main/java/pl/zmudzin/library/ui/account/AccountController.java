@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.zmudzin.library.application.account.AccountData;
 import pl.zmudzin.library.application.account.AccountService;
 import pl.zmudzin.library.application.account.AccountUpdateRequest;
-import pl.zmudzin.library.util.ModelProcessorUtil;
+import pl.zmudzin.library.ui.util.ModelProcessorUtil;
 
 import javax.validation.Valid;
 

@@ -8,7 +8,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.zmudzin.library.application.member.*;
-import pl.zmudzin.library.util.ModelProcessorUtil;
+import pl.zmudzin.library.ui.util.ModelProcessorUtil;
 
 import javax.validation.Valid;
 
