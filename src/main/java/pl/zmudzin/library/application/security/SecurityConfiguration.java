@@ -28,9 +28,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
+    private JWTService jwtService;
 
-    public SecurityConfiguration(UserDetailsService userDetailsService) {
+    public SecurityConfiguration(UserDetailsService userDetailsService, JWTService jwtService) {
         this.userDetailsService = userDetailsService;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -63,7 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JWTAuthorizationFilter authorizationFilter() {
-        return new JWTAuthorizationFilter();
+        return new JWTAuthorizationFilter(jwtService);
     }
 
     @Bean

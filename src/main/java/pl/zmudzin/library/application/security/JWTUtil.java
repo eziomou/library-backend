@@ -19,24 +19,18 @@ import java.util.stream.Collectors;
  * @author Piotr Żmudzin
  */
 class JWTUtil {
-    
-    private static final String SECRET = "11DBA47AD0E6DFE15DB291A8A4E6E9CEF6CB9C791D3D7A4301DEE4A388DA9C99";
+
     private static final Long EXPIRATION_TIME = 864000000L;
 
-    private static final String AUTHORITY_PREFIX = "ROLE_";
-    private static final String AUTHORITIES_CLAIM = "roles";
+    public static final String AUTHORITY_PREFIX = Roles.PREFIX;
+    public static final String AUTHORITIES_CLAIM = "roles";
 
-    static DecodedJWT decodeToken(String token) {
-        return JWT.require(Algorithm.HMAC256(SECRET)).build()
-                .verify(token);
-    }
-
-    static String createToken(Authentication authentication) {
+    public static String getToken(Authentication authentication, String secret) {
         return JWT.create()
-                .withSubject(createSubject(authentication))
-                .withArrayClaim(AUTHORITIES_CLAIM, mapAuthorities(authentication.getAuthorities()))
-                .withExpiresAt(calculateExpirationDate())
-                .sign(Algorithm.HMAC256(SECRET));
+                .withSubject(JWTUtil.createSubject(authentication))
+                .withArrayClaim(JWTUtil.AUTHORITIES_CLAIM, JWTUtil.mapAuthorities(authentication.getAuthorities()))
+                .withExpiresAt(JWTUtil.getExpirationDate())
+                .sign(Algorithm.HMAC256(secret));
     }
 
     private static String createSubject(Authentication authentication) {
@@ -54,26 +48,32 @@ class JWTUtil {
         return authority.getAuthority().replace(AUTHORITY_PREFIX, "").toLowerCase();
     }
 
-    private static Date calculateExpirationDate() {
+    private static Date getExpirationDate() {
         return new Date(System.currentTimeMillis() + EXPIRATION_TIME);
     }
 
-    static Authentication createAuthentication(DecodedJWT decodedJWT) {
-        return new UsernamePasswordAuthenticationToken(createPrincipal(decodedJWT), null,
-                createAuthorities(decodedJWT));
+    public static Authentication getAuthentication(String token, String secret) {
+        DecodedJWT decodedToken = JWT.require(Algorithm.HMAC256(secret)).build()
+                .verify(token);
+
+        return new UsernamePasswordAuthenticationToken(
+                JWTUtil.getPrincipal(decodedToken),
+                null,
+                JWTUtil.getAuthorities(decodedToken)
+        );
     }
 
-    private static Object createPrincipal(DecodedJWT decodedJWT) {
+    public static Object getPrincipal(DecodedJWT decodedToken) {
         return User.builder()
-                .username(decodedJWT.getSubject())
+                .username(decodedToken.getSubject())
                 .password("")
-                .authorities(createAuthorities(decodedJWT))
+                .authorities(getAuthorities(decodedToken))
                 .build();
     }
 
-    private static Collection<GrantedAuthority> createAuthorities(DecodedJWT decodedJWT) {
-        if (!decodedJWT.getClaim(AUTHORITIES_CLAIM).isNull()) {
-            return decodedJWT.getClaim(AUTHORITIES_CLAIM).asList(String.class).stream()
+    public static Collection<GrantedAuthority> getAuthorities(DecodedJWT decodedToken) {
+        if (!decodedToken.getClaim(AUTHORITIES_CLAIM).isNull()) {
+            return decodedToken.getClaim(AUTHORITIES_CLAIM).asList(String.class).stream()
                     .map(JWTUtil::mapAuthority)
                     .collect(Collectors.toSet());
         }

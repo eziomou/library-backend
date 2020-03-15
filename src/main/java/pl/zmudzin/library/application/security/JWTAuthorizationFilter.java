@@ -1,6 +1,5 @@
 package pl.zmudzin.library.application.security;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,6 +18,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private static final String TOKEN_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer";
 
+    private JWTService jwtService;
+
+    public JWTAuthorizationFilter(JWTService jwtService) {
+        this.jwtService = jwtService;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
@@ -29,9 +34,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
         String token = extractToken(header);
-        DecodedJWT decodedJWT = JWTUtil.decodeToken(token);
 
-        Authentication authentication = JWTUtil.createAuthentication(decodedJWT);
+        Authentication authentication = null;
+        try {
+            authentication = jwtService.getAuthentication(token);
+        } catch (Exception ignored) {
+        }
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         chain.doFilter(request, response);

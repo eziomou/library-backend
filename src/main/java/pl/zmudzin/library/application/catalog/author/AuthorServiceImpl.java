@@ -16,8 +16,6 @@ import pl.zmudzin.library.application.util.PersonPredicateBuilder;
 import pl.zmudzin.library.domain.catalog.Author;
 import pl.zmudzin.library.domain.catalog.AuthorRepository;
 
-import javax.persistence.criteria.Path;
-
 /**
  * @author Piotr Żmudzin
  */

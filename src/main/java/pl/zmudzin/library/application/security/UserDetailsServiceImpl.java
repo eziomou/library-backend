@@ -3,7 +3,6 @@ package pl.zmudzin.library.application.security;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,7 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserDetails map(Account account, Collection<GrantedAuthority> authorities) {
-        return User.builder()
+        return UserDetailsBuilder.builder()
                 .username(account.getUsername())
                 .password(account.getPassword())
                 .authorities(authorities)
