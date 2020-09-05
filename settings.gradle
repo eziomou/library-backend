@@ -1,2 +1,5 @@
 rootProject.name = 'library-backend'
+include 'core'
+include 'jooq-persistence'
+include 'spring-rest-api'
 
