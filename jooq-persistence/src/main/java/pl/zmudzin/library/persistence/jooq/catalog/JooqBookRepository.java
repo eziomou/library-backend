@@ -21,6 +21,7 @@ import pl.zmudzin.library.persistence.jooq.schema.Tables;
 
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.jooq.impl.DSL.condition;
 
@@ -118,14 +119,8 @@ public class JooqBookRepository extends AbstractJooqRepository<Book, BookId> imp
 
     private List<Condition> createConditions(BookQuery query) {
         List<Condition> c = new ArrayList<>();
-        query.phrase().ifPresent(p -> c.add(condition("to_tsvector('english', " +
-                BOOK.TITLE.toString() + " || ' ' || " +
-                BOOK.DESCRIPTION.toString() + " || ' ' || " +
-                AUTHOR.FIRST_NAME.toString() + " || ' ' || " +
-                AUTHOR.LAST_NAME.toString() + " || ' ' || " +
-                GENRE.NAME.toString() + " || ' ' || " +
-                PUBLISHER.NAME.toString() +
-                ") @@ plainto_tsquery('english', ?)", p)));
+        query.phrase().ifPresent(p -> c.add(condition(toTsVector(BOOK.TITLE, BOOK.DESCRIPTION, AUTHOR.FIRST_NAME,
+                AUTHOR.LAST_NAME, GENRE.NAME, PUBLISHER.NAME) + " @@ plainto_tsquery('english', ?)")));
         query.getTitle().ifPresent(t -> c.add(BOOK.TITLE.eq(t)));
         query.getDescription().ifPresent(d -> c.add(BOOK.DESCRIPTION.eq(d)));
         query.getMinPublicationDate().ifPresent(d -> c.add(BOOK.PUBLICATION_DATE.ge(d.atOffset(ZoneOffset.UTC))));
@@ -134,5 +129,10 @@ public class JooqBookRepository extends AbstractJooqRepository<Book, BookId> imp
         query.getGenreId().ifPresent(i -> c.add(BOOK.GENRE_ID.eq(UUID.fromString(i.toString()))));
         query.getPublisherId().ifPresent(i -> c.add(BOOK.PUBLISHER_ID.eq(UUID.fromString(i.toString()))));
         return c;
+    }
+
+    private String toTsVector(Object... objects) {
+        return "to_tsvector('english', " + Arrays.stream(objects).map(Object::toString)
+                .collect(Collectors.joining(" || ' ' || ")) + ")";
     }
 }

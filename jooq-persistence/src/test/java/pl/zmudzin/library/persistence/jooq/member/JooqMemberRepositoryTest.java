@@ -20,13 +20,6 @@ class JooqMemberRepositoryTest extends AbstractJooqRepositoryTest<MemberReposito
         persistenceUtil = new PersistenceUtil(context);
     }
 
-    @AfterEach
-    @Override
-    protected void afterEach() {
-        super.afterEach();
-        persistenceUtil.removeAll();
-    }
-
     @Override
     protected Member getEntity() {
         return new Member(MemberId.of(UUID.randomUUID().toString()), persistenceUtil.randomAccount());
@@ -41,5 +34,12 @@ class JooqMemberRepositoryTest extends AbstractJooqRepositoryTest<MemberReposito
     protected void assertEntityEquals(Member expected, Member result) {
         assertEquals(expected.getId(), result.getId());
         assertEquals(expected.getAccount().getId(), result.getAccount().getId());
+    }
+
+    @AfterEach
+    @Override
+    protected void afterEach() {
+        super.afterEach();
+        persistenceUtil.removeAll();
     }
 }

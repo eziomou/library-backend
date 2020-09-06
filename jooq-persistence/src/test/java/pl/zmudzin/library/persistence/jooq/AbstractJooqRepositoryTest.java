@@ -1,5 +1,6 @@
 package pl.zmudzin.library.persistence.jooq;
 
+import org.h2.jdbcx.JdbcDataSource;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.conf.RenderNameCase;
@@ -9,8 +10,6 @@ import org.jooq.impl.DSL;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import pl.zmudzin.library.core.domain.common.Entity;
 import pl.zmudzin.library.core.domain.common.Repository;
 
@@ -22,8 +21,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractJooqRepositoryTest<R extends Repository<E, ID>, E extends Entity<ID>, ID> {
 
-    protected static final DataSource dataSource = new EmbeddedDatabaseBuilder()
-            .setType(EmbeddedDatabaseType.H2).addScript("classpath:schema.sql").build();
+    protected static final DataSource dataSource;
+
+    static {
+        JdbcDataSource jdbcDataSource = new JdbcDataSource();
+        jdbcDataSource.setURL("jdbc:h2:~/test;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=10;MODE=PostgreSQL;INIT=RUNSCRIPT FROM 'classpath:schema.sql'");
+        dataSource = jdbcDataSource;
+    }
 
     protected static final Settings settings = new Settings()
             .withRenderQuotedNames(RenderQuotedNames.EXPLICIT_DEFAULT_UNQUOTED)

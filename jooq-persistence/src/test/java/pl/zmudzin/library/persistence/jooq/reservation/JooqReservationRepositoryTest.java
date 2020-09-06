@@ -1,5 +1,6 @@
 package pl.zmudzin.library.persistence.jooq.reservation;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pl.zmudzin.library.core.domain.catalog.book.Book;
@@ -49,6 +50,13 @@ class JooqReservationRepositoryTest extends AbstractJooqRepositoryTest<Reservati
         assertEquals(expected.getMemberId(), result.getMemberId());
         assertEquals(expected.getBookId(), result.getBookId());
         assertEquals(expected.getStatus(), result.getStatus());
+    }
+
+    @AfterEach
+    @Override
+    protected void afterEach() {
+        super.afterEach();
+        persistenceUtil.removeAll();
     }
 
     @Test

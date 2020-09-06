@@ -1,5 +1,6 @@
 package pl.zmudzin.library.persistence.jooq.loan;
 
+import org.junit.jupiter.api.AfterEach;
 import pl.zmudzin.library.core.domain.loan.Loan;
 import pl.zmudzin.library.core.domain.loan.LoanId;
 import pl.zmudzin.library.core.domain.loan.LoanRepository;
@@ -48,5 +49,12 @@ class JooqLoanRepositoryTest extends AbstractJooqRepositoryTest<LoanRepository, 
         assertEquals(expected.getLoanDate().truncatedTo(ChronoUnit.SECONDS), result.getLoanDate().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(expected.getDueDate().truncatedTo(ChronoUnit.SECONDS), result.getDueDate().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(expected.isReturned(), result.isReturned());
+    }
+
+    @AfterEach
+    @Override
+    protected void afterEach() {
+        super.afterEach();
+        persistenceUtil.removeAll();
     }
 }

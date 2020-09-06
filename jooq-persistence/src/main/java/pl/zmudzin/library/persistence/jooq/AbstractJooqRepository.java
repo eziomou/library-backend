@@ -5,6 +5,7 @@ import pl.zmudzin.library.core.domain.common.Entity;
 import pl.zmudzin.library.core.domain.common.Repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -112,5 +113,9 @@ public abstract class AbstractJooqRepository<E extends Entity<ID>, ID> implement
     @Override
     public void deleteAll() {
         context.delete(table).execute();
+    }
+
+    public List<E> findAll() {
+        return joinStep().fetch(this::mapToDomainModel);
     }
 }

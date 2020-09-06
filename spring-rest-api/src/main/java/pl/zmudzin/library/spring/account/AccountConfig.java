@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pl.zmudzin.library.core.application.account.AccountService;
 import pl.zmudzin.library.core.application.account.AccountServiceImpl;
-import pl.zmudzin.library.core.domain.account.PasswordEncoder;
 import pl.zmudzin.library.core.domain.account.AccountFactory;
 import pl.zmudzin.library.core.domain.account.AccountRepository;
+import pl.zmudzin.library.core.domain.account.PasswordEncoder;
 import pl.zmudzin.library.persistence.jooq.account.JooqAccountRepository;
 
 @Configuration

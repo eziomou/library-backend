@@ -26,13 +26,6 @@ class JooqRatingRepositoryTest extends AbstractJooqRepositoryTest<RatingReposito
         persistenceUtil = new PersistenceUtil(context);
     }
 
-    @AfterEach
-    @Override
-    protected void afterEach() {
-        super.afterEach();
-        persistenceUtil.removeAll();
-    }
-
     @Override
     protected Rating getEntity() {
         return new Rating(
@@ -54,6 +47,13 @@ class JooqRatingRepositoryTest extends AbstractJooqRepositoryTest<RatingReposito
         assertEquals(expected.getId(), result.getId());
         assertEquals(expected.getMemberId(), result.getMemberId());
         assertEquals(expected.getBookId(), result.getBookId());
+    }
+
+    @AfterEach
+    @Override
+    protected void afterEach() {
+        super.afterEach();
+        persistenceUtil.removeAll();
     }
 
     @Test
