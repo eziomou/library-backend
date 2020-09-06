@@ -3,6 +3,7 @@ package pl.zmudzin.library.spring.catalog.publisher;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.zmudzin.library.core.application.catalog.publisher.PublisherData;
 import pl.zmudzin.library.core.application.catalog.publisher.PublisherService;
@@ -22,6 +23,7 @@ public class PublisherController {
         this.publisherService = publisherService;
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addPublisher(@Valid @RequestBody AddPublisherRequest request) {
@@ -41,6 +43,7 @@ public class PublisherController {
         return ResponseEntity.ok(publishers);
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @PutMapping(path = "/{publisherId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updatePublisher(@PathVariable String publisherId, @Valid @RequestBody UpdatePublisherRequest request) {
@@ -48,6 +51,7 @@ public class PublisherController {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @DeleteMapping(path = "/{publisherId}")
     public ResponseEntity<PublisherData> removePublisher(@PathVariable String publisherId) {

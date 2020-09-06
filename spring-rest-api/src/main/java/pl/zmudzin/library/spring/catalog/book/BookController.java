@@ -3,6 +3,7 @@ package pl.zmudzin.library.spring.catalog.book;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.zmudzin.library.core.application.catalog.book.AddBookCommand;
 import pl.zmudzin.library.core.application.catalog.book.BookData;
@@ -26,6 +27,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addBook(@Valid @RequestBody AddBookRequest request) {
@@ -52,6 +54,7 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @PutMapping(path = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateBook(@PathVariable String bookId, UpdateBookRequest request) {
@@ -67,6 +70,7 @@ public class BookController {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @DeleteMapping(path = "/{bookId}")
     public ResponseEntity<?> deleteBook(@PathVariable String bookId) {

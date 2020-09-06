@@ -3,6 +3,7 @@ package pl.zmudzin.library.spring.member;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.zmudzin.library.core.application.common.Paginated;
 import pl.zmudzin.library.core.application.member.MemberData;
@@ -23,6 +24,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    @Transactional
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> registerMember(@Valid @RequestBody RegisterMemberRequest request) {
         memberService.registerMember(RegisterMemberCommand.builder()

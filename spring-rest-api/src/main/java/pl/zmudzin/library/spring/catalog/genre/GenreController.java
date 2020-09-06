@@ -3,6 +3,7 @@ package pl.zmudzin.library.spring.catalog.genre;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.zmudzin.library.core.application.catalog.genre.GenreData;
 import pl.zmudzin.library.core.application.catalog.genre.GenreService;
@@ -22,6 +23,7 @@ public class GenreController {
         this.genreService = genreService;
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addGenre(@Valid @RequestBody AddGenreRequest request) {
@@ -41,6 +43,7 @@ public class GenreController {
         return ResponseEntity.ok(genres);
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @PutMapping(path = "/{genreId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateGenre(@PathVariable String genreId, @Valid @RequestBody UpdateGenreRequest request) {
@@ -48,6 +51,7 @@ public class GenreController {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @DeleteMapping(path = "/{genreId}")
     public ResponseEntity<GenreData> removeGenre(@PathVariable String genreId) {

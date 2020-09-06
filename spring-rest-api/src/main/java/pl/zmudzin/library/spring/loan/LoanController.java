@@ -3,6 +3,7 @@ package pl.zmudzin.library.spring.loan;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.zmudzin.library.core.application.common.Paginated;
 import pl.zmudzin.library.core.application.loan.LoanData;
@@ -26,6 +27,7 @@ public class LoanController {
         this.authorizationService = authorizationService;
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @PostMapping(path = BookController.BASE_PATH + "/{bookId}/loans", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> borrowBook(@PathVariable String bookId, @Valid @RequestBody BorrowBookRequest request) {
@@ -33,6 +35,7 @@ public class LoanController {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     @Secured({Role.LIBRARIAN})
     @PutMapping(path = BookController.BASE_PATH + "/{bookId}/loans")
     public ResponseEntity<?> returnBook(@PathVariable String bookId) {

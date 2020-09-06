@@ -3,6 +3,7 @@ package pl.zmudzin.library.spring.account;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.zmudzin.library.core.application.account.AccountData;
 import pl.zmudzin.library.core.application.account.AccountService;
@@ -30,6 +31,7 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
+    @Transactional
     @Secured({Role.MEMBER, Role.LIBRARIAN})
     @PutMapping(path = "/account/password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updatePassword(@Valid @RequestBody UpdatePasswordRequest request) {
@@ -37,6 +39,7 @@ public class AccountController {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     @Secured({Role.MEMBER, Role.LIBRARIAN})
     @PutMapping(path = "/account/profile", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileRequest request) {
