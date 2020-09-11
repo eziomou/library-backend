@@ -120,7 +120,7 @@ public class JooqBookRepository extends AbstractJooqRepository<Book, BookId> imp
     private List<Condition> createConditions(BookQuery query) {
         List<Condition> c = new ArrayList<>();
         query.phrase().ifPresent(p -> c.add(condition(toTsVector(BOOK.TITLE, BOOK.DESCRIPTION, AUTHOR.FIRST_NAME,
-                AUTHOR.LAST_NAME, GENRE.NAME, PUBLISHER.NAME) + " @@ plainto_tsquery('english', ?)")));
+                AUTHOR.LAST_NAME, GENRE.NAME, PUBLISHER.NAME) + " @@ plainto_tsquery('english', ?)", p)));
         query.getTitle().ifPresent(t -> c.add(BOOK.TITLE.eq(t)));
         query.getDescription().ifPresent(d -> c.add(BOOK.DESCRIPTION.eq(d)));
         query.getMinPublicationDate().ifPresent(d -> c.add(BOOK.PUBLICATION_DATE.ge(d.atOffset(ZoneOffset.UTC))));
